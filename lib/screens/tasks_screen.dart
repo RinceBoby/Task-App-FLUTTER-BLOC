@@ -1,60 +1,50 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_bloc/model/task_model.dart';
+import 'package:todo_bloc/widgets/task_list_widget.dart';
+
+import '../blocs/bloc_exports.dart';
 
 class TaskScreen extends StatelessWidget {
-  TaskScreen({Key? key}) : super(key: key);
-
-  List<TaskModel> taskList = [
-    TaskModel(title: 'Task1'),
-    TaskModel(title: 'Task2'),
-    TaskModel(title: 'Task3'),
-  ];
+  const TaskScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Task App",
-          style: TextStyle(
-            fontSize: 24,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(CupertinoIcons.add_circled),
-          ),
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Center(
-            child: Chip(
-              label: Text("Tasks:"),
+    return BlocBuilder<TasksBloc, TasksState>(
+      builder: (context, state) {
+        List<TaskModel> tasksList = state.allTasks;
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "Task App",
+              style: TextStyle(
+                fontSize: 24,
+              ),
             ),
+            actions: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(CupertinoIcons.add_circled),
+              ),
+            ],
           ),
-          ListView.builder(
-            itemCount: taskList.length,
-            itemBuilder: (context, index) {
-              var task = taskList[index];
-              return ListTile(
-                title: Text(task.title),
-                trailing: Checkbox(
-                  value: task.isDone,
-                  onChanged: (value) {},
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Center(
+                child: Chip(
+                  label: Text("Tasks:"),
                 ),
-              );
-            },
+              ),
+              TaskList(taskList: tasksList),
+            ],
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.add),
+          ),
+        );
+      },
     );
   }
 }

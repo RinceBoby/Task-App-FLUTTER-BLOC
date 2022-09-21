@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:todo_bloc/screens/tasks_screen.dart';
+import 'package:todo_bloc/model/task_model.dart';
+
+import 'blocs/bloc_exports.dart';
+import 'screens/tasks_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  BlocOverrides.runZoned(() => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -12,14 +15,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          textTheme: GoogleFonts.montserratTextTheme(
-            Theme.of(context).textTheme,
+    return BlocProvider(
+      create: (context) => TasksBloc()
+        ..add(
+          AddTask(
+            task: TaskModel(title: 'Task1'),
           ),
         ),
-        home: TaskScreen());
+      child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            textTheme: GoogleFonts.montserratTextTheme(
+              Theme.of(context).textTheme,
+            ),
+          ),
+          home: TaskScreen()),
+    );
   }
 }
